@@ -1,5 +1,5 @@
 # cpputils2
-![cpputils workflow](https://github.com/yangosoft/cpputils2/actions/workflows/cmake.yml/badge.svg)
+![cpputils2 workflow](https://github.com/yangosoft/cpputils2/actions/workflows/cmake-multi-platform.yml/badge.svg)
 
 New version of https://github.com/yangosoft/cpputils to include new features and to learn C++23 
 
