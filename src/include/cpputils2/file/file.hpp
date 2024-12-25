@@ -9,6 +9,16 @@
 namespace CppUtils2
 {
 
+  inline Result unlink(const std::string &path)
+  {
+    auto ret = std::remove(path.c_str());
+    if (ret == 0)
+    {
+      return Result::RET_OK;
+    }
+    return Result::RET_ERROR;
+  }
+
   inline bool file_exists(const std::string &name)
   {
     std::ifstream f(name.c_str());

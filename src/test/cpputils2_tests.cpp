@@ -120,7 +120,17 @@ namespace
 
   TEST(ExampleFutex, TestShared)
   {
-    CppUtils2::SharedFutex futex("/test_futex");
+    if (CppUtils2::file_exists("/dev/shm/test_futex"))
+    {
+      CppUtils2::unlink("/dev/shm/test_futex");
+    }
+
+    CppUtils2::Shm shm("/test_futex");
+    shm.allocate(sizeof(int32_t));
+    void *ptr = shm.get_raw_ptr();
+
+    CppUtils2::SharedFutex futex;
+    futex.init("/test_futex");
     futex.lock();
     futex.unlock();
 
