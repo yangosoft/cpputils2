@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+get_filename_component(utilities_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+
+include(CMakeFindDependencyMacro)
+
+
+if(NOT TARGET CPPUTILS2::cpputils2)
+    include("${CMAKE_CURRENT_LIST_DIR}/Cpputils2Targets.cmake")
+endif()
+
+check_required_components(cpputils2)
