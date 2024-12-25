@@ -120,7 +120,16 @@ target_include_directories( test_cpputils2
         ${CMAKE_CURRENT_SOURCE_DIR}/source
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-target_link_libraries(test_cpputils2 PRIVATE GTest::gtest_main rt spdlog::spdlog)
+
+set(TEST_LIBS GTest::gtest GTest::gtest_main  spdlog::spdlog)
+
+if (WIN32)
+    list(APPEND TEST_LIBS ws2_32)
+else()
+    list(APPEND TEST_LIBS rt)
+endif()
+
+target_link_libraries(test_cpputils2 PRIVATE cpputils2 ${TEST_LIBS})
 include(CTest)
 
 #add_test(CppUtils2Test test_cpputils2 --gtest_output=xml)
