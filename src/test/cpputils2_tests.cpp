@@ -2,6 +2,10 @@
 
 #include "cpputils2/common/types.hpp"
 #include "cpputils2/file/file.hpp"
+#include "cpputils2/trigger/trigger.hpp"
+
+#ifdef __linux__
+
 #include "cpputils2/linux/futex/futex.hpp"
 #include "cpputils2/linux/futex/shared_futex.hpp"
 #include "cpputils2/linux/net/socket/tcpsocketclient.hpp"
@@ -11,7 +15,7 @@
 #include "cpputils2/linux/net/socket/udsclient.hpp"
 #include "cpputils2/linux/net/socket/udsserver.hpp"
 #include "cpputils2/linux/shm/shm.hpp"
-#include "cpputils2/trigger/trigger.hpp"
+#endif
 
 #include <atomic>
 #include <chrono>
@@ -27,6 +31,7 @@
 namespace
 {
 
+#ifdef __linux__
   TEST(ExampleShm, TestInstance)
   {
     CppUtils2::Shm shm("/test_shm");
@@ -121,6 +126,8 @@ namespace
 
     EXPECT_TRUE(true);
   }
+
+#endif
 
   TEST(ExampleTrigger, TestTrigger)
   {

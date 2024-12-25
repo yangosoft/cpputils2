@@ -16,21 +16,33 @@ find_package(Threads REQUIRED)
 
 # find_package(common REQUIRED)
 
+set(SOURCES_AND_HEADERS 
+    include/cpputils2/common/types.hpp
+    include/cpputils2/trigger/trigger.hpp
+    include/cpputils2/file/file.hpp
+    
+)
+
+if (WIN32)
+
+else()
+    list(APPEND SOURCES_AND_HEADERS
+    include/cpputils2/linux/net/socket/tcpsocketclient.hpp
+    include/cpputils2/linux/net/socket/tcpsocketserver.hpp
+    include/cpputils2/linux/net/socket/udpsocketserver.hpp
+    include/cpputils2/linux/net/socket/udpsocketclient.hpp
+    include/cpputils2/linux/net/socket/socket.hpp
+    include/cpputils2/linux/net/socket/isocket.hpp
+    include/cpputils2/linux/net/socket/udsclient.hpp
+    include/cpputils2/linux/net/socket/udsserver.hpp
+    include/cpputils2/linux/shm/shm.hpp
+    include/cpputils2/linux/futex/futex.hpp
+    include/cpputils2/linux/futex/shared_futex.hpp
+    )
+endif()
+
 add_library(cpputils2 INTERFACE 
-            include/cpputils2/common/types.hpp
-            include/cpputils2/trigger/trigger.hpp
-            include/cpputils2/linux/net/socket/tcpsocketclient.hpp
-            include/cpputils2/linux/net/socket/tcpsocketserver.hpp
-	          include/cpputils2/linux/net/socket/udpsocketserver.hpp
-            include/cpputils2/linux/net/socket/udpsocketclient.hpp
-            include/cpputils2/linux/net/socket/socket.hpp
-            include/cpputils2/linux/net/socket/isocket.hpp
-            include/cpputils2/linux/net/socket/udsclient.hpp
-            include/cpputils2/linux/net/socket/udsserver.hpp
-            include/cpputils2/file/file.hpp
-            include/cpputils2/linux/shm/shm.hpp
-            include/cpputils2/linux/futex/futex.hpp
-            include/cpputils2/linux/futex/shared_futex.hpp
+    ${SOURCES_AND_HEADERS}
 )
 
 #Set target properties
