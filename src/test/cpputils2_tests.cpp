@@ -17,6 +17,10 @@
 #include "cpputils2/linux/shm/shm.hpp"
 #endif
 
+#ifdef _WIN32
+#include "cpputils2/win/shm/shm.hpp"
+#endif
+
 #include <atomic>
 #include <chrono>
 #include <cstddef>
@@ -137,6 +141,54 @@ namespace
     EXPECT_TRUE(true);
   }
 
+#endif
+
+#ifdef _WIN32
+  TEST(ExampleSHM, TestSHM) {
+	  CppUtils2::Shm shm("test_shm");
+	  auto ret = shm.allocate(sizeof(int32_t));
+	  EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+	  void* ptr = shm.get_raw_ptr();
+      EXPECT_NE(ptr, nullptr);
+	  int32_t* ptr_int = reinterpret_cast<int32_t*>(ptr);
+	  std::cout << "ptr_int: " << *ptr_int << std::endl;
+	  *ptr_int = 42;
+	  int32_t val = *ptr_int;
+	  EXPECT_EQ(val, 42);
+	  shm.close();
+	  shm.unlink();
+	  EXPECT_TRUE(true);
+  }
+  TEST(ExampleShm, TestExisting)
+  {
+      CppUtils2::Shm shm("test_shm");
+      auto ret = shm.allocate(sizeof(int32_t));
+      EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+
+      void* ptr = shm.get_raw_ptr();
+	  EXPECT_NE(ptr, nullptr);
+      int32_t* ptr_int = reinterpret_cast<int32_t*>(ptr);
+      std::cout << "ptr_int: " << *ptr_int << std::endl;
+      *ptr_int = 42;
+
+      int32_t val = *ptr_int;
+      EXPECT_EQ(val, 42);
+
+      
+
+      CppUtils2::Shm shm2("test_shm");
+      ret = shm2.open_existing(sizeof(int32_t));
+      EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+      ptr = shm2.get_raw_ptr();
+      ptr_int = reinterpret_cast<int32_t*>(ptr);
+      std::cout << "ptr_int: " << *ptr_int << std::endl;
+
+      val = *ptr_int;
+      EXPECT_EQ(val, 42);
+      shm2.close();
+      shm.close();
+      shm.unlink();
+  }
 #endif
 
   TEST(ExampleTrigger, TestTrigger)
