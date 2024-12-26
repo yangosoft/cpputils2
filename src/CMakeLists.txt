@@ -24,7 +24,7 @@ set(SOURCES_AND_HEADERS
 )
 
 if (WIN32)
-
+list(APPEND SOURCES_AND_HEADERS include/cpputils2/win/shm/shm.hpp)
 else()
     list(APPEND SOURCES_AND_HEADERS
     include/cpputils2/linux/net/socket/tcpsocketclient.hpp
