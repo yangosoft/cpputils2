@@ -9,6 +9,8 @@
 
 #include "cpputils2/common/types.hpp"
 
+#include <string>
+
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>
@@ -27,15 +29,22 @@ namespace CppUtils2
 		}
 
 		Shm(const std::string& file_mem_path)
+			: mem_path(file_mem_path.begin(), file_mem_path.end()), hMapFile(nullptr), pBuf{ nullptr }
+		{
+		}
+
+		Shm(const std::wstring& file_mem_path)
 			: mem_path(file_mem_path), hMapFile(nullptr), pBuf{ nullptr }
 		{
 		}
+
+
 
 		/// @brief Open an existing shared memory
 	/// @param file_mem_path Path to the shared memory
 	/// @param mem_size Size of the shared memory
 	/// @return 0 on success, -1 on error
-		Result open_existing(const std::string& file_mem_path, std::size_t mem_size)
+		Result open_existing(const std::wstring& file_mem_path, std::size_t mem_size)
 		{
 			mem_path = file_mem_path;
 			return open_existing(mem_size);
@@ -50,7 +59,7 @@ namespace CppUtils2
 			{
 				return Result::RET_ERROR;
 			}
-			int flags = 0;
+			auto flags = Operation::OPEN;
 			return shared_open(flags, mem_size);
 		}
 
@@ -64,7 +73,7 @@ namespace CppUtils2
 				return Result::RET_ERROR;
 			}
 
-			int flags = 1;
+			auto flags = Operation::CREATE;
 
 			return shared_open(flags, mem_size);
 		}
@@ -105,27 +114,28 @@ namespace CppUtils2
 		}
 
 	private:
-		std::string mem_path;
+		std::wstring mem_path;
 		HANDLE hMapFile;
 		LPVOID pBuf;
-
-		Result shared_open(int flags, std::size_t mem_size)
+		enum class Operation: int
 		{
-			if (flags == 1) {
+			OPEN,
+			CREATE
+		};
 
-				//TCHAR szName[] = TEXT(mem_path.c_str());
-
-				hMapFile = CreateFileMappingA(
+		Result shared_open(Operation flags, std::size_t mem_size)
+		{
+			if (flags == Operation::CREATE) {
+				hMapFile = CreateFileMapping(
 					INVALID_HANDLE_VALUE,    // use paging file
 					nullptr,                    // default security
 					PAGE_READWRITE,          // read/write access
 					0,                       // maximum object size (high-order DWORD)
 					mem_size,                // maximum object size (low-order DWORD)
-					mem_path.c_str());                 // name of mapping object
+					(LPCTSTR)mem_path.c_str());                 // name of mapping object
 			
 				if (hMapFile == NULL)
 				{
-					
 					return Result::RET_ERROR;
 				}
 
@@ -138,19 +148,17 @@ namespace CppUtils2
 				if (pBuf == nullptr)
 				{
 					//_tprintf(TEXT("Could not map view of file (%d).\n"),		GetLastError());
-
 					CloseHandle(hMapFile);
-
 					return Result::RET_ERROR;
 				}
 			
 			}
 			else {
 
-				hMapFile = OpenFileMappingA(
+				hMapFile = OpenFileMapping(
 					FILE_MAP_ALL_ACCESS,   // read/write access
 					FALSE,                 // do not inherit the name
-					mem_path.c_str());               // name of mapping object
+					(LPCTSTR)mem_path.c_str());               // name of mapping object
 
 				if (hMapFile == NULL)
 				{

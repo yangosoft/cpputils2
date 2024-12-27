@@ -145,7 +145,7 @@ namespace
 
 #ifdef _WIN32
   TEST(ExampleSHM, TestSHM) {
-	  CppUtils2::Shm shm("test_shm");
+	  CppUtils2::Shm shm(L"test_shm");
 	  auto ret = shm.allocate(sizeof(int32_t));
 	  EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
 	  void* ptr = shm.get_raw_ptr();
@@ -159,9 +159,10 @@ namespace
 	  shm.unlink();
 	  EXPECT_TRUE(true);
   }
+
   TEST(ExampleShm, TestExisting)
   {
-      CppUtils2::Shm shm("test_shm");
+      CppUtils2::Shm shm(L"test_shm");
       auto ret = shm.allocate(sizeof(int32_t));
       EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
 
