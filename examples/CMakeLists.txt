@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.14)
+
 Include(FetchContent)
 FetchContent_Declare(
   spdlog

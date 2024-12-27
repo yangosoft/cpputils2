@@ -20,12 +20,19 @@ set(SOURCES_AND_HEADERS
     include/cpputils2/common/types.hpp
     include/cpputils2/trigger/trigger.hpp
     include/cpputils2/file/file.hpp
-    
+    include/cpputils2/net/socket/isocket.hpp
 )
 
 if (WIN32)
-list(APPEND SOURCES_AND_HEADERS include/cpputils2/win/shm/shm.hpp)
+
+list(APPEND SOURCES_AND_HEADERS 
+    include/cpputils2/win/shm/shm.hpp
+    include/cpputils2/win/net/socket/socket.hpp
+    include/cpputils2/win/net/socket/tcpsocketclient.hpp
+    include/cpputils2/win/net/socket/tcpsocketserver.hpp)
+
 else()
+
     list(APPEND SOURCES_AND_HEADERS
     include/cpputils2/linux/net/socket/tcpsocketclient.hpp
     include/cpputils2/linux/net/socket/tcpsocketserver.hpp
@@ -39,6 +46,7 @@ else()
     include/cpputils2/linux/futex/futex.hpp
     include/cpputils2/linux/futex/shared_futex.hpp
     )
+
 endif()
 
 add_library(cpputils2 INTERFACE 

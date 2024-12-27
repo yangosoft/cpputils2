@@ -18,6 +18,8 @@
 #endif
 
 #ifdef _WIN32
+#include "cpputils2/win/net/socket/tcpsocketclient.hpp"
+#include "cpputils2/win/net/socket/tcpsocketserver.hpp"
 #include "cpputils2/win/shm/shm.hpp"
 #endif
 
@@ -144,52 +146,83 @@ namespace
 #endif
 
 #ifdef _WIN32
-  TEST(ExampleSHM, TestSHM) {
-	  CppUtils2::Shm shm(L"test_shm");
-	  auto ret = shm.allocate(sizeof(int32_t));
-	  EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
-	  void* ptr = shm.get_raw_ptr();
-      EXPECT_NE(ptr, nullptr);
-	  int32_t* ptr_int = reinterpret_cast<int32_t*>(ptr);
-	  std::cout << "ptr_int: " << *ptr_int << std::endl;
-	  *ptr_int = 42;
-	  int32_t val = *ptr_int;
-	  EXPECT_EQ(val, 42);
-	  shm.close();
-	  shm.unlink();
-	  EXPECT_TRUE(true);
+  TEST(ExampleSHM, TestSHM)
+  {
+    CppUtils2::Shm shm(L"test_shm");
+    auto ret = shm.allocate(sizeof(int32_t));
+    EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+    void *ptr = shm.get_raw_ptr();
+    EXPECT_NE(ptr, nullptr);
+    int32_t *ptr_int = reinterpret_cast<int32_t *>(ptr);
+    std::cout << "ptr_int: " << *ptr_int << std::endl;
+    *ptr_int = 42;
+    int32_t val = *ptr_int;
+    EXPECT_EQ(val, 42);
+    shm.close();
+    shm.unlink();
+    EXPECT_TRUE(true);
   }
 
   TEST(ExampleShm, TestExisting)
   {
-      CppUtils2::Shm shm(L"test_shm");
-      auto ret = shm.allocate(sizeof(int32_t));
-      EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+    CppUtils2::Shm shm(L"test_shm");
+    auto ret = shm.allocate(sizeof(int32_t));
+    EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
 
-      void* ptr = shm.get_raw_ptr();
-	  EXPECT_NE(ptr, nullptr);
-      int32_t* ptr_int = reinterpret_cast<int32_t*>(ptr);
-      std::cout << "ptr_int: " << *ptr_int << std::endl;
-      *ptr_int = 42;
+    void *ptr = shm.get_raw_ptr();
+    EXPECT_NE(ptr, nullptr);
+    int32_t *ptr_int = reinterpret_cast<int32_t *>(ptr);
+    std::cout << "ptr_int: " << *ptr_int << std::endl;
+    *ptr_int = 42;
 
-      int32_t val = *ptr_int;
-      EXPECT_EQ(val, 42);
+    int32_t val = *ptr_int;
+    EXPECT_EQ(val, 42);
 
-      
+    CppUtils2::Shm shm2("test_shm");
+    ret = shm2.open_existing(sizeof(int32_t));
+    EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+    ptr = shm2.get_raw_ptr();
+    ptr_int = reinterpret_cast<int32_t *>(ptr);
+    std::cout << "ptr_int: " << *ptr_int << std::endl;
 
-      CppUtils2::Shm shm2("test_shm");
-      ret = shm2.open_existing(sizeof(int32_t));
-      EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
-      ptr = shm2.get_raw_ptr();
-      ptr_int = reinterpret_cast<int32_t*>(ptr);
-      std::cout << "ptr_int: " << *ptr_int << std::endl;
-
-      val = *ptr_int;
-      EXPECT_EQ(val, 42);
-      shm2.close();
-      shm.close();
-      shm.unlink();
+    val = *ptr_int;
+    EXPECT_EQ(val, 42);
+    shm2.close();
+    shm.close();
+    shm.unlink();
   }
+
+  TEST(ExampleTCPClient, TestTCPClient)
+  {
+    CppUtils2::net::TCPSocketServer server(9999, [](std::unique_ptr<CppUtils2::net::ISocket> fdClient)
+                                           {
+  std::string data;
+  fdClient->read_string(data);
+  std::cout << "Received: " << data << std::endl;
+  fdClient->write_string("World");
+  fdClient->disconnect(); });
+
+    std::thread t([&server]()
+                  {
+                    auto ret = server.listen();
+                    EXPECT_EQ(ret, 0);
+                    server.do_accept(); });
+
+    CppUtils2::net::TCPSocketClient client;
+    auto ret = client.connect("localhost", 9999);
+    EXPECT_NE(ret, CppUtils2::Result::RET_ERROR);
+    client.write_string("Hello");
+
+    /*char buffer[1024];
+    auto ret2 = client.read_data(buffer, 1024);
+    EXPECT_NE(ret2, -1);
+    std::string data(buffer);
+    std::cout << "Received: " << data << std::endl;
+*/
+    client.disconnect();
+    t.join();
+  }
+
 #endif
 
   TEST(ExampleTrigger, TestTrigger)
