@@ -39,7 +39,6 @@ else()
     include/cpputils2/linux/net/socket/udpsocketserver.hpp
     include/cpputils2/linux/net/socket/udpsocketclient.hpp
     include/cpputils2/linux/net/socket/socket.hpp
-    include/cpputils2/linux/net/socket/isocket.hpp
     include/cpputils2/linux/net/socket/udsclient.hpp
     include/cpputils2/linux/net/socket/udsserver.hpp
     include/cpputils2/linux/shm/shm.hpp
