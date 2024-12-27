@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cpputils2/linux/net/socket/isocket.hpp"
+#include "cpputils2/net/socket/isocket.hpp"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"

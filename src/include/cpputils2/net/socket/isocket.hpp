@@ -1,13 +1,18 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 #include <string>
 
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/spdlog.h"
-
-#include <cstdint>
-#include <iostream>
+#ifdef _WIN32
+using ssize_t = std::int32_t;
+#else
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 
 namespace CppUtils2
 {
