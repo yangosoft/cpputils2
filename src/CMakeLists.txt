@@ -84,9 +84,9 @@ configure_package_config_file(
 )
 
 
-install (TARGETS cpputils2 EXPORT cpputils2-targets 
+install (TARGETS cpputils2 EXPORT cpputils2-targets
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         INCLUDES DESTINATION include/cpputils2/utility)
+         INCLUDES DESTINATION include/cpputils2)
 
 export(EXPORT cpputils2-targets
   FILE "${CMAKE_CURRENT_BINARY_DIR}/CPPUTILS2Targets.cmake"
@@ -136,7 +136,7 @@ else()
     list(APPEND TEST_LIBS rt)
 endif()
 
-target_link_libraries(test_cpputils2 PRIVATE cpputils2 ${TEST_LIBS})
+target_link_libraries(test_cpputils2 PRIVATE CPPUTILS2::cpputils2 ${TEST_LIBS})
 include(CTest)
 
 #add_test(CppUtils2Test test_cpputils2 --gtest_output=xml)
