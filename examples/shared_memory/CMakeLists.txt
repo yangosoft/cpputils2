@@ -3,7 +3,8 @@ project(example_shared_memory  VERSION 1.0.0 LANGUAGES CXX)
 
 
 if(NOT TARGET CPPUTILS2::cpputils2)
-    find_package(cpputils2 REQUIRED)
+    message("Not target!")
+    find_package(CPPUTILS2 REQUIRED)
 
     Include(FetchContent)
 FetchContent_Declare(
