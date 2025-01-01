@@ -1,4 +1,6 @@
 
+#include <cpputils2/cpputils2.hpp>
+
 #ifdef _WIN32
 #include <cpputils2/win/shm/shm.hpp>
 #else
@@ -13,6 +15,7 @@ const std::string file_name("test_shm");
 
 int main(int argc, char **argv)
 {
+  SPDLOG_INFO("cpputils2 version {}", CppUtils2::VERSION);
   SPDLOG_INFO("Test shared memory");
 
   CppUtils2::Shm shm(file_name);

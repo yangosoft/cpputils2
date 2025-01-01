@@ -15,8 +15,11 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 # find_package(common REQUIRED)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/cpputils2/cpputils2.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/include/cpputils2/cpputils2.hpp)
+
 
 set(SOURCES_AND_HEADERS 
+    include/cpputils2/cpputils2.hpp
     include/cpputils2/common/types.hpp
     include/cpputils2/trigger/trigger.hpp
     include/cpputils2/file/file.hpp
