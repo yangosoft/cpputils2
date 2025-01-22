@@ -147,11 +147,18 @@ namespace
   TEST(ThreadMng, ThreadMng)
   {
     CppUtils2::BestEffortThreadConfig config;
+
     std::thread t([&config]() {
 
     });
     auto ret = CppUtils2::set_thread_sched_policy(t, config);
     EXPECT_EQ(ret, CppUtils2::Result::RET_OK);
+
+    auto exp_config = CppUtils2::get_thread_sched_policy(t);
+    EXPECT_TRUE(exp_config.has_value());
+    EXPECT_EQ(exp_config.value().policy, config.policy);
+    EXPECT_EQ(exp_config.value().priority, config.priority);
+
     t.join();
   }
 
