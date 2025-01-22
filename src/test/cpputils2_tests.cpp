@@ -15,6 +15,7 @@
 #include "cpputils2/linux/net/socket/udsclient.hpp"
 #include "cpputils2/linux/net/socket/udsserver.hpp"
 #include "cpputils2/linux/shm/shm.hpp"
+#include "cpputils2/linux/thread/thread.hpp"
 #endif
 
 #ifdef _WIN32
@@ -141,6 +142,17 @@ namespace
     futex.unlock();
 
     EXPECT_TRUE(true);
+  }
+
+  TEST(ThreadMng, ThreadMng)
+  {
+    CppUtils2::BestEffortThreadConfig config;
+    std::thread t([&config]() {
+
+    });
+    auto ret = CppUtils2::set_thread_sched_policy(t, config);
+    EXPECT_EQ(ret, CppUtils2::Result::RET_OK);
+    t.join();
   }
 
 #endif
