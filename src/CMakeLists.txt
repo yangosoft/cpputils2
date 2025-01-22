@@ -7,7 +7,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Pthread
@@ -47,6 +47,7 @@ else()
     include/cpputils2/linux/shm/shm.hpp
     include/cpputils2/linux/futex/futex.hpp
     include/cpputils2/linux/futex/shared_futex.hpp
+    include/cpputils2/linux/thread/thread.hpp
     )
 
 endif()
