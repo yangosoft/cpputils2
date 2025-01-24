@@ -44,6 +44,15 @@ namespace CppUtils2
         }
     };
 
+    struct DeadLineThreadConfig : public ThreadConfig
+    {
+        DeadLineThreadConfig()
+        {
+            policy = SCHED_DEADLINE;
+            priority = 0;
+        }
+    };
+
     Result set_thread_sched_policy(std::thread &thread, const int policy, const int priority)
     {
         struct sched_param param;
