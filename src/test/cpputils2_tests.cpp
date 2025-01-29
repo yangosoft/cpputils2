@@ -14,6 +14,7 @@
 #include "cpputils2/linux/net/socket/udpsocketserver.hpp"
 #include "cpputils2/linux/net/socket/udsclient.hpp"
 #include "cpputils2/linux/net/socket/udsserver.hpp"
+#include "cpputils2/linux/priomutex/priomutex.hpp"
 #include "cpputils2/linux/sched/sched.hpp"
 #include "cpputils2/linux/shm/shm.hpp"
 #include "cpputils2/linux/thread/thread.hpp"
@@ -166,6 +167,15 @@ namespace
   TEST(Scheduler, Scheduler)
   {
     EXPECT_EQ(CppUtils2::Result::RET_OK, CppUtils2::Result::RET_OK);
+  }
+
+  TEST(PriorityMutex, PriorityMutex)
+  {
+    CppUtils2::priomutex mutex;
+    bool is_initialized = mutex.is_initialized();
+    EXPECT_TRUE(is_initialized);
+    mutex.lock();
+    mutex.unlock();
   }
 
 #endif
