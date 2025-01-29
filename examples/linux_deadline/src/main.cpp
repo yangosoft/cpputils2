@@ -31,7 +31,8 @@ void signalHandler(int signum)
 int main(int argc, char **argv)
 {
   SPDLOG_INFO("cpputils2 version {}", CppUtils2::VERSION);
-  SPDLOG_INFO("Test deadline Linux scheduler");
+  SPDLOG_INFO("Test deadline Linux scheduler. Ctrl-C to finish test.");
+
   CppUtils2::sched_attr attr;
   attr.size = sizeof(CppUtils2::sched_attr);
   attr.sched_policy = SCHED_DEADLINE;

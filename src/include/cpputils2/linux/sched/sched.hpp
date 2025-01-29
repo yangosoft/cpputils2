@@ -2,17 +2,15 @@
 
 #include "cpputils2/common/types.hpp"
 
+#include <cassert>
+#include <cstdint>
+#include <expected>
 #include <pthread.h>
 #include <sched.h>
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#include <cassert>
-#include <expected>
-#include <sys/syscall.h>
-#include <unistd.h>
-#include <sched.h>
-#include <cstdint>
+#include <span>
 
 namespace CppUtils2
 {
@@ -35,12 +33,12 @@ namespace CppUtils2
         sched_attr() : size(sizeof(sched_attr)) {}
     };
 
-    int32_t sched_getattr(pid_t pid, sched_attr *attr, unsigned int size, unsigned int flags)
+    int32_t sched_getattr(pid_t pid, sched_attr *attr, unsigned int size, unsigned int flags = 0)
     {
         return syscall(SYS_sched_getattr, pid, attr, size, flags);
     }
 
-    int32_t sched_setattr(pid_t pid, const sched_attr *attr, uint32_t flags)
+    int32_t sched_setattr(pid_t pid, const sched_attr *attr, uint32_t flags = 0)
     {
         return syscall(SYS_sched_setattr, pid, attr, flags);
     }
@@ -58,6 +56,39 @@ namespace CppUtils2
         }
 
         return Result::RET_OK;
+    }
+
+    std::expected<Result, int32_t> set_process_core_affinity(pid_t pid, const cpu_set_t *mask)
+    {
+        int ret = sched_setaffinity(pid, sizeof(cpu_set_t), mask);
+        if (ret != 0)
+        {
+            return std::unexpected(errno);
+        }
+        return Result::RET_OK;
+    }
+
+    std::expected<Result, int32_t> set_self_core_affinity(const cpu_set_t *mask)
+    {
+        return set_process_core_affinity(getpid(), mask);
+    }
+
+    std::expected<Result, int32_t> set_process_core_affinity(pid_t pid, const std::span<uint32_t, std::dynamic_extent> &mask)
+    {
+
+        cpu_set_t cpuset;
+        CPU_ZERO(&cpuset);
+        for (auto core : mask)
+        {
+            CPU_SET(core, &cpuset);
+        }
+
+        return set_process_core_affinity(pid, &cpuset);
+    }
+
+    std::expected<Result, int32_t> set_self_core_affinity(const std::span<uint32_t, std::dynamic_extent> &mask)
+    {
+        return set_process_core_affinity(getpid(), mask);
     }
 
 } // namespace CppUtils2
