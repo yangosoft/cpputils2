@@ -94,4 +94,16 @@ namespace CppUtils2
         return config;
     }
 
+    int32_t pin_thread_to_core(std::thread &thread, const int core_id)
+    {
+        cpu_set_t cpuset;
+        CPU_ZERO(&cpuset);
+        CPU_SET(core_id, &cpuset);
+
+        // ensure that native_handler() is a pthread_t
+        assert(typeid(thread.native_handle()) == typeid(pthread_t));
+
+        return pthread_setaffinity_np(thread.native_handle(), sizeof(cpu_set_t), &cpuset);
+    }
+
 }

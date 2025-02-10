@@ -10,3 +10,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 
 add_subdirectory(shared_memory)
+
+if (WIN32)
+
+else()
+add_subdirectory(linux_deadline)
+endif()

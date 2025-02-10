@@ -48,6 +48,8 @@ else()
     include/cpputils2/linux/futex/futex.hpp
     include/cpputils2/linux/futex/shared_futex.hpp
     include/cpputils2/linux/thread/thread.hpp
+    include/cpputils2/linux/sched/sched.hpp
+    include/cpputils2/linux/priomutex/priomutex.hpp
     )
 
 endif()
