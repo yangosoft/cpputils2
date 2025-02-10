@@ -7,13 +7,13 @@
 namespace CppUtils2
 {
 
-    class priomutex
+    class PrioMutex
     {
 
     public:
         using native_handle_type = pthread_mutex_t *;
 
-        priomutex()
+        PrioMutex()
         {
             initialized = false;
             pthread_mutexattr_t attr;
@@ -39,13 +39,13 @@ namespace CppUtils2
             initialized = true;
         }
 
-        virtual ~priomutex()
+        virtual ~PrioMutex()
         {
             pthread_mutex_destroy(&pt_mutex);
         }
 
-        priomutex(const priomutex &) = delete;
-        priomutex &operator=(const priomutex &) = delete;
+        PrioMutex(const PrioMutex &) = delete;
+        PrioMutex &operator=(const PrioMutex &) = delete;
 
         void lock()
         {

@@ -171,7 +171,7 @@ namespace
 
   TEST(PriorityMutex, PriorityMutex)
   {
-    CppUtils2::priomutex mutex;
+    CppUtils2::PrioMutex mutex;
     bool is_initialized = mutex.is_initialized();
     EXPECT_TRUE(is_initialized);
     mutex.lock();
